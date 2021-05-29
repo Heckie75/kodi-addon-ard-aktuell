@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+rm plugin.video.ardaktuell.zip
+zip -r plugin.video.ardaktuell.zip plugin.video.ardaktuell -x "*.git" "*LICENSE" "*README.md" "*.gitignore" "*__pycache__"

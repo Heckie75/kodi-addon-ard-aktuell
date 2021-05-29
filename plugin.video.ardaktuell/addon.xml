@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.ardaktuell" name="ARD Aktuell" version="1.0.1-pre2" provider-name="Heckie">
+<addon id="plugin.video.ardaktuell" name="ARD Aktuell" version="1.0.1-pre3" provider-name="Heckie">
     <requires>
         <import addon="xbmc.python" version="3.0.0" />
         <import addon="script.module.requests" version="2.25.1" />
@@ -23,9 +23,10 @@
         <website>https://github.com/Heckie75/kodi-addon-ard-aktuell</website>
         <source>https://github.com/Heckie75/kodi-addon-ard-aktuell/tree/main/plugin.video.ardaktuell</source>
         <news>
-v1.0.1 (2021-06-xx)
+v1.0.1 (2021-05-31)
 - Fixed broken URLs to github
 - Fixed issue #2: Navigation back from episodes is incorrect
+- Refactoring: seperate general rss code for easier maintainance in future
 
 v1.0.0 (2021-05-24)
 - Initial version
