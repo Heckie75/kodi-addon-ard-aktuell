@@ -90,16 +90,18 @@ class HttpStatusError(Exception):
 
 class Mediathek:
 
-    _menu = None
-
     addon_handle = None
 
     def __init__(self):
 
-        def _make_node(broadcast, type, url, latest_only):
+        pass
+
+    def _build_dir_structure(self):
+
+        def _make_node(index, broadcast, type, url, latest_only):
 
             _node = {
-                "path": "latest" if latest_only else str(base64.urlsafe_b64encode(broadcast["name"].encode("utf-8"))),
+                "path": "latest" if latest_only else str(index),
                 "name": broadcast["name"],
                 "icon": broadcast["icon"],
                 "type": type,
@@ -116,18 +118,18 @@ class Mediathek:
             return _node
 
         _nodes = []
-        for broadcast in BROADCASTS:
+        for i, broadcast in enumerate(BROADCASTS):
 
             _quality = int(settings.getSetting("quality"))
             if "video_url" in broadcast and _quality < 4:
                 _nodes.append(_make_node(
-                    broadcast, "video", broadcast["video_url"] % QUALITY_LEVEL[_quality], settings.getSetting("archive") != "true"))
+                    i, broadcast, "video", broadcast["video_url"] % QUALITY_LEVEL[_quality], settings.getSetting("archive") != "true"))
 
             elif "audio_url" in broadcast:
-                _nodes.append(_make_node(broadcast, "music",
+                _nodes.append(_make_node(i, broadcast, "music",
                                          broadcast["audio_url"], settings.getSetting("archive") != "true"))
 
-        self._menu = [
+        return [
             {  # root
                 "path": "",
                 "node": _nodes
@@ -363,15 +365,15 @@ class Mediathek:
                     self.addon_handle, xbmcplugin.SORT_METHOD_DATE)
             xbmcplugin.endOfDirectory(self.addon_handle)
 
-    def _browse(self, path):
+    def _browse(self, dir_structure, path, updateListing=False):
 
         def _get_node_by_path(path):
 
             if path == "/":
-                return self._menu[0]
+                return dir_structure[0]
 
             tokens = path.split("/")[1:]
-            node = self._menu[0]
+            node = dir_structure[0]
 
             while len(tokens) > 0:
                 path = tokens.pop(0)
@@ -386,7 +388,7 @@ class Mediathek:
         for entry in node["node"]:
             self._add_list_item(entry, path)
 
-        xbmcplugin.endOfDirectory(self.addon_handle, updateListing=False)
+        xbmcplugin.endOfDirectory(self.addon_handle, updateListing=updateListing)
 
     def handle(self, argv):
 
@@ -406,7 +408,8 @@ class Mediathek:
             url = decode_param(url_params["play_latest"][0])
             self._play_latest(url)
         else:
-            self._browse(path=path)
+            _dir_structure = self._build_dir_structure()
+            self._browse(dir_structure=_dir_structure, path=path)
 
 
 if __name__ == '__main__':
