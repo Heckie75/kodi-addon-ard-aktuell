@@ -64,7 +64,7 @@ class ArdAktuellAddon(AbstractRssAddon):
 
     def __init__(self, addon_handle):
 
-        AbstractRssAddon.__init__(self, self.__PLUGIN_ID__, addon_handle)
+        super().__init__(self.__PLUGIN_ID__, addon_handle)
 
     def _build_dir_structure(self):
 
@@ -116,7 +116,7 @@ class ArdAktuellAddon(AbstractRssAddon):
             tokens = path.split("/")[1:]
             node = dir_structure[0]
 
-            while len(tokens) > 0:
+            while tokens:
                 path = tokens.pop(0)
                 for n in node["node"]:
                     if n["path"] == path:
