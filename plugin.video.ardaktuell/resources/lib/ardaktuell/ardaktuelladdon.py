@@ -5,8 +5,6 @@ import xbmcplugin
 
 class ArdAktuellAddon(AbstractRssAddon):
 
-    __PLUGIN_ID__ = "plugin.video.ardaktuell"
-
     QUALITY_LEVEL = ["webxl", "webl", "webm", "webs"]
 
     BROADCASTS = [
@@ -64,7 +62,7 @@ class ArdAktuellAddon(AbstractRssAddon):
 
     def __init__(self, addon_handle):
 
-        super().__init__(self.__PLUGIN_ID__, addon_handle)
+        super().__init__(addon_handle)
 
     def _build_dir_structure(self):
 
