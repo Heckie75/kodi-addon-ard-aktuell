@@ -1,5 +1,6 @@
 from resources.lib.rssaddon.abstract_rss_addon import AbstractRssAddon
 
+import xbmcgui
 import xbmcplugin
 
 
@@ -57,14 +58,20 @@ class ArdAktuellAddon(AbstractRssAddon):
             "icon": "https://www.tagesschau.de/multimedia/bilder/mal-angenommen-podcast-cover-105~_v-original.jpg",
             "audio_url": "https://www.tagesschau.de/multimedia/podcasts/mal-angenommen-feed-101.xml",
             "type": "audio"
+        },
+        {
+            "name": "Ideenimport",
+            "icon": "https://www.tagesschau.de/multimedia/bilder/auslandspodcast-de-tagesschau-ideenimport-109~_v-original.jpg",
+            "audio_url": "https://www.tagesschau.de/multimedia/podcasts/ideenimport-feed-105.xml",
+            "type": "audio"
         }
     ]
 
-    def __init__(self, addon_handle):
+    def __init__(self, addon_handle) -> None:
 
         super().__init__(addon_handle)
 
-    def _build_dir_structure(self):
+    def _build_dir_structure(self) -> None:
 
         def _make_node(index, broadcast, type, url, latest_only):
 
@@ -104,7 +111,7 @@ class ArdAktuellAddon(AbstractRssAddon):
             }
         ]
 
-    def _browse(self, dir_structure, path, updateListing=False):
+    def _browse(self, dir_structure, path: str, updateListing=False):
 
         def _get_node_by_path(path):
 
@@ -129,6 +136,21 @@ class ArdAktuellAddon(AbstractRssAddon):
 
         xbmcplugin.endOfDirectory(
             self.addon_handle, updateListing=updateListing)
+
+    def check_disclaimer(self) -> bool:
+
+        if self.addon.getSetting("agreement") != "1":
+            answer = xbmcgui.Dialog().yesno(self.addon.getLocalizedString(32005),
+                                            self.addon.getLocalizedString(32010))
+
+            if answer:
+                self.addon.setSetting("agreement", "1")
+                return True
+            else:
+                return False
+
+        else:
+            return True
 
     def route(self, path, url_params):
         
